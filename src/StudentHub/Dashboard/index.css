@@ -1,0 +1,67 @@
+
+.wd-grid-col-left-sidebar {
+    width: 100px;
+    float: left;
+    background-color: black;
+    text-align: center;
+}
+
+.wd-grid-col-main-content {
+    width: 75%;
+    float: left;
+}
+
+.wd-grid-col-right-sidebar {
+    width: 20%;
+    float: left;
+}
+
+.wd-grid-row {
+    clear: both;
+    width: 100%;
+}
+
+.inline-block {
+    display: inline-block;
+    padding: 15px;
+}
+
+.sec-sidebar {
+    width: 195px;
+    float: left;
+    text-align: left;
+}
+
+.sec-content {
+    float: left;
+}
+
+.color-gray {
+    color: gray;
+}
+
+.main-heading {
+    padding: 20px;
+}
+
+.card {
+    width: 300px;
+    margin: 10px;
+}
+
+.card-deck {
+    padding: 20px;
+    width: 100vw;
+}
+
+.card-img-top {
+    height: 180px;
+}
+
+.list-group-item {
+    padding: 20px;
+}
+
+.btn {
+    margin: 10px;
+}
