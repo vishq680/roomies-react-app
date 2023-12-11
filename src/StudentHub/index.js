@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import axios from "axios";
 import Login from "./Login";
+import Universities from "./Universities";
+import Students from "./Students";
+import SignUp from "./SignUp";
+import Profile from "./Profile";
 
 
 
@@ -14,9 +18,6 @@ function StudentHub() {
     return (
 
         <div >
-            {/* <div>
-                <HubNavigation />
-            </div> */}
 
             <div className="d-flex">
                 <Routes>
@@ -26,6 +27,10 @@ function StudentHub() {
                         <Dashboard />
                     } />
                     <Route path="Login" element={<Login />} />
+                    <Route path="SignUp" element={<SignUp />} />
+                    <Route path="Universities" element={<Universities />} />
+                    <Route path="Students" element={<Students />} />
+                    <Route path="Profile" element={<Profile />} />
 
                 </Routes>
 

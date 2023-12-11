@@ -1,60 +1,75 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import './index.css';
+import axios from 'axios';
+import { useAuth } from "../../AuthContext";
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+
+
+
 
 
 
 function Login() {
 
+    const request = axios.create({
+        withCredentials: true,
+    });
+
+
+    const navigate = useNavigate();
+    const { isSignedIn, setSignIn } = useAuth();
+
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+
+    const handleSignIn = async () => {
+        try {
+            const response = await request.post('https://roomies-node-app.onrender.com/api/users/signin', { username, password });
+            console.log(response.data);
+            console.log('Sign-in successful');
+            setSignIn(response.data);
+            navigate('/StudentHub/Dashboard');
+
+        } catch (error) {
+            console.error('Error signing in:', error.response.data.message);
+            alert('Invalid credentials. Please try again.');
+        }
+    };
+
     return (
-        <div>
-            <form>
-                <div class="form-outline mb-4">
-                    <input type="email" id="form2Example1" class="form-control" />
-                    <label class="form-label" for="form2Example1">Email address</label>
-                </div>
 
-                <div class="form-outline mb-4">
-                    <input type="password" id="form2Example2" class="form-control" />
-                    <label class="form-label" for="form2Example2">Password</label>
-                </div>
+        <Container>
+            <Row className="justify-content-md-center">
+                <Col md={6}>
+                    <h1>Sign In</h1>
+                    <br />
+                    <br />
+                    <Form>
+                        <Form.Group controlId="formBasicUsername">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" placeholder="Enter username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                        </Form.Group>
 
-                <div class="row mb-4">
-                    <div class="col d-flex justify-content-center">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                            <label class="form-check-label" for="form2Example31"> Remember me </label>
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </Form.Group>
+
+                        <Button variant="primary" onClick={handleSignIn}>
+                            Sign In
+                        </Button>
+                    </Form>
+                    <Link to={`/StudentHub/SignUp`}>
+                        <div class="text-center">
+                            <p>Not a member? <a href="#!">Register</a></p>
                         </div>
-                    </div>
+                    </Link>
+                </Col>
+            </Row>
+        </Container>
 
-                    <div class="col">
-                        <a href="#!">Forgot password?</a>
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
-
-                <div class="text-center">
-                    <p>Not a member? <a href="#!">Register</a></p>
-                    <p>or sign up with:</p>
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-google"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-twitter"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-link btn-floating mx-1">
-                        <i class="fab fa-github"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
 
     );
 

@@ -1,18 +1,10 @@
-import { React, useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import './index.css'
-import axios from 'axios';
+import { React, useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthContext";
+import './index.css'
 
 
-function Dashboard() {
-
-    const request = axios.create({
-        withCredentials: true,
-    });
-    const navigate = useNavigate();
-    const {setSignOut} = useAuth();
-
+function Profile() {
 
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
@@ -20,19 +12,6 @@ function Dashboard() {
 
     const toggleDropdown = () => {
         setDropdownOpen(!isDropdownOpen);
-    };
-
-    const handleSignOut = async () => {
-        try {
-            const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
-            console.log(response.data);
-            setSignOut();
-            navigate('/StudentHub/Dashboard');
-
-
-        } catch (error) {
-            console.error(error.response.data);
-        }
     };
 
     useEffect(() => {
@@ -69,13 +48,6 @@ function Dashboard() {
     const { isSignedIn } = useAuth();
 
 
-    useEffect(() => {
-        // Fetch data when the component mounts
-        axios.get('https://roomies-node-app.onrender.com/api/users/univ')
-            .then(response => setUniversities(response.data))
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
-
     return (
         <div>
             <nav class="navbar navbar-dark navbar-expand-md bg-dark justify-content-center">
@@ -90,12 +62,6 @@ function Dashboard() {
                                 <a class="nav-link" href="">Top Universities</a>
                             </li>
                         </Link>
-                        {/* <li class="nav-item">
-                            <a class="nav-link" href="//codeply.com">Codeply</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li> */}
                     </ul>
                     <ul class="nav navbar-nav ml-auto w-100 justify-content-end p-2">
                         {
@@ -123,7 +89,7 @@ function Dashboard() {
                                                 </li>
                                             </Link>
                                             <li>
-                                                <a className="dropdown-item" href="#" onClick={handleSignOut}>
+                                                <a className="dropdown-item" href="#" >
                                                     <i className="fas fa-door-open pe-2"></i>Logout
                                                 </a>
                                             </li>
@@ -146,60 +112,16 @@ function Dashboard() {
                 </div>
             </nav>
 
-
-            <div className="container d-flex justify-content-center align-items-center vh-10 search">
-                <div className="row">
-                    <div className="col-md-12 offset-md-2">
-                        <div className="input-group mb-3">
-                            <input
-                                type="text"
-                                className="form-control "
-                                placeholder="Search University"
-                                aria-label="Search"
-                                aria-describedby="basic-addon2"
-                            />
-                            <div className="input-group-append">
-                                <Link to={`/StudentHub/Students`}>
-                                    <button className="btn btn-primary" type="button">
-                                        Search
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
             <div>
                 <div>
                     <div>
-                        <h2 class="p-2">Popular Universities</h2>
-                        <hr />
-
-                        <div className="card-deck d-flex flex-row flex-wrap">
-                            {universities.map((university, index) => (
-                                <div key={index} className="card m-2">
-                                    <img className="card-img-top" src={university.imageUrl} alt={university.name} />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{university.name}</h5>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                    <div>
-                        <br />
-                        <br />
-
-                        <h2>Recommended Universities</h2>
-                        <hr />
                         <div className="card-deck d-flex flex-row flex-wrap">
                             <div className="card">
                                 <img className="card-img-top" src="../../images/blue.jpeg" alt="Not Found" />
                                 <div className="card-body">
-                                    <h5 className="card-title">University Name</h5>
+                                    <h5 className="card-title">Student name</h5>
+                                    <p className="card-text">University Name</p>
+                                    <p className="card-text">Course Name</p>
                                 </div>
                             </div>
                         </div>
@@ -209,4 +131,5 @@ function Dashboard() {
         </div>
     );
 }
-export default Dashboard;
+
+export default Profile;
