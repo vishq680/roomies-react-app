@@ -28,9 +28,17 @@ function Login() {
         try {
             const response = await request.post('https://roomies-node-app.onrender.com/api/users/signin', { username, password });
             console.log(response.data);
-            console.log('Sign-in successful');
-            setSignIn(response.data);
-            navigate('/StudentHub/Dashboard');
+            if (response.data.length === 0) {
+                console.log('Sign-in Unsuccessful');
+                
+            }
+            else {
+                console.log('Sign-in successful');
+                setSignIn(response.data);
+                navigate('/StudentHub/Dashboard');
+
+            }
+
 
         } catch (error) {
             console.error('Error signing in:', error.response.data.message);
