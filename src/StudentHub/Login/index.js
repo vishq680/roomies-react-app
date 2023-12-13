@@ -31,7 +31,6 @@ function Login() {
             if (response.data.length === 0) {
                 console.log('Error signing in:');
                 alert('Invalid credentials. Please try again.');
-
             }
             else {
                 console.log('Sign-in successful');
