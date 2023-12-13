@@ -14,15 +14,15 @@ const SignUpForm = () => {
     major: '',
     term: '',
     year: '',
-    smoking: '',
-    drinking: '',
-    veg: '',
+    smoking: false,
+    drinking: false,
+    veg: false,
     Age: '',
-    shared: '',
-    hobbies: '',
+    shared: false,
+    hobbies: [],
     degree: '',
     mail: '',
-    languages: '',
+    languages: [],
     about: '',
     username: '',
     password: '',
@@ -39,7 +39,7 @@ const SignUpForm = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === 'hobbies' || name === 'languages' ? value.split(',').map(item => item.trim()) : value,
     }));
   };
 
@@ -62,15 +62,15 @@ const SignUpForm = () => {
         major: '',
         term: '',
         year: '',
-        smoking: '',
-        drinking: '',
-        veg: '',
+        smoking: false,
+        drinking: false,
+        veg: false,
         Age: '',
-        shared: '',
-        hobbies: '',
+        shared: false,
+        hobbies: [],
         degree: '',
         mail: '',
-        languages: '',
+        languages: [],
         about: '',
         username: '',
         password: '',
@@ -88,7 +88,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <Container>
+    <Container class='formN'>
       <Row className="justify-content-md-center">
         <Col md={6}>
           <h1 class='justify-center'>Sign Up</h1>
@@ -192,38 +192,74 @@ const SignUpForm = () => {
 
             <Form.Group controlId="formSmoking">
               <Form.Label>Smoking</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your Smoking status"
-                name="smoking"
-                value={formData.smoking}
-                onChange={handleChange}
-                required
-              />
+              <div>
+                <Form.Check
+                  type="radio"
+                  label="Yes"
+                  name="smoking"
+                  value="true"
+                  checked={formData.smoking === "true"}
+                  onChange={handleChange}
+                  required
+                />
+                <Form.Check
+                  type="radio"
+                  label="No"
+                  name="smoking"
+                  value="false"
+                  checked={formData.smoking === "false"}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </Form.Group>
 
             <Form.Group controlId="formDrinking">
               <Form.Label>Drinking</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your Drinking status"
-                name="drinking"
-                value={formData.drinking}
-                onChange={handleChange}
-                required
-              />
+              <div>
+                <Form.Check
+                  type="radio"
+                  label="Yes"
+                  name="drinking"
+                  value="true"
+                  checked={formData.drinking === "true"}
+                  onChange={handleChange}
+                  required
+                />
+                <Form.Check
+                  type="radio"
+                  label="No"
+                  name="drinking"
+                  value="false"
+                  checked={formData.drinking === "false"}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </Form.Group>
 
             <Form.Group controlId="formVeg">
               <Form.Label>Veg</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your Vegetarian status"
-                name="veg"
-                value={formData.veg}
-                onChange={handleChange}
-                required
-              />
+              <div>
+                <Form.Check
+                  type="radio"
+                  label="Yes"
+                  name="veg"
+                  value="true"
+                  checked={formData.veg === "true"}
+                  onChange={handleChange}
+                  required
+                />
+                <Form.Check
+                  type="radio"
+                  label="No"
+                  name="veg"
+                  value="false"
+                  checked={formData.veg === "false"}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </Form.Group>
 
             <Form.Group controlId="formAge">
@@ -240,26 +276,41 @@ const SignUpForm = () => {
 
             <Form.Group controlId="formShared">
               <Form.Label>Shared</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter your Shared status"
-                name="shared"
-                value={formData.shared}
-                onChange={handleChange}
-                required
-              />
+              <div>
+                <Form.Check
+                  type="radio"
+                  label="Yes"
+                  name="shared"
+                  value="true"
+                  checked={formData.shared === "true"}
+                  onChange={handleChange}
+                  required
+                />
+                <Form.Check
+                  type="radio"
+                  label="No"
+                  name="shared"
+                  value="false"
+                  checked={formData.shared === "false"}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </Form.Group>
 
             <Form.Group controlId="formHobbies">
               <Form.Label>Hobbies</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter your Hobbies"
+                placeholder="Enter your Hobbies (comma-separated)"
                 name="hobbies"
-                value={formData.hobbies}
+                value={formData.hobbies.join(', ')}
                 onChange={handleChange}
                 required
               />
+              <Form.Text className="text-muted">
+                Enter your hobbies separated by commas.
+              </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="formDegree">
@@ -290,12 +341,15 @@ const SignUpForm = () => {
               <Form.Label>Languages</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter your Languages"
+                placeholder="Enter your Languages (comma-separated)"
                 name="languages"
-                value={formData.languages}
+                value={formData.languages.join(', ')}
                 onChange={handleChange}
                 required
               />
+              <Form.Text className="text-muted">
+                Enter your languages separated by commas.
+              </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="formAbout">

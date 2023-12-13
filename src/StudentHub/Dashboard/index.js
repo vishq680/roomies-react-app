@@ -4,7 +4,7 @@ import './index.css'
 import axios from 'axios';
 import { useAuth } from "../../AuthContext";
 import AuthService from "../AuthService";
-
+import './index.css';
 
 
 function Dashboard() {
@@ -28,8 +28,10 @@ function Dashboard() {
 
 
     const capitalizeFirstLetter = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    };
+        return str
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');    };
 
 
     const handleSignOut = async () => {
@@ -37,6 +39,8 @@ function Dashboard() {
             const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
             console.log(response.data);
             setSignOut();
+            AuthService.clearUserDetails();
+
             navigate('/StudentHub/Dashboard');
 
         } catch (error) {
@@ -82,7 +86,7 @@ function Dashboard() {
 
 
     const storedUserDetails = AuthService.getUserDetails();
-    console.log(storedUserDetails[0].university)
+    // console.log(storedUserDetails[0].university)
 
 
 
@@ -93,6 +97,7 @@ function Dashboard() {
             .then(response => setUniversities(response.data))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
+
 
     useEffect(() => {
 
@@ -119,12 +124,6 @@ function Dashboard() {
                                 <a class="nav-link" href="">Top Universities</a>
                             </li>
                         </Link>
-                        {/* <li class="nav-item">
-                            <a class="nav-link" href="//codeply.com">Codeply</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li> */}
                     </ul>
                     <ul class="nav navbar-nav ml-auto w-100 justify-content-end p-2">
                         {
@@ -210,7 +209,7 @@ function Dashboard() {
 
                         <div className="card-deck d-flex flex-row flex-wrap">
                             {universities.map((university, index) => (
-                                <Link class='no-underline' to={{ pathname: `/StudentHub/Students`, state: { data: `${university.name}` } }}>
+                                <Link class='no-underline' to={ `/StudentHub/Students/${universities.name}`}>
                                     <div key={index} className="card m-2">
                                         <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={university.name} />
                                         <div className="card-body">

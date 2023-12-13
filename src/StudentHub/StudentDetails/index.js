@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import './index.css'
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
+import AuthService from "../AuthService";
 
 
 function StudentDetails(props) {
@@ -15,14 +16,18 @@ function StudentDetails(props) {
 
 
     const capitalizeFirstLetter = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      };
+        return str
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
 
     const handleSignOut = async () => {
         try {
             const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
             console.log(response.data);
             setSignOut();
+            AuthService.clearUserDetails();
             navigate('/StudentHub/Dashboard');
 
         } catch (error) {

@@ -32,7 +32,7 @@ function StudentHub() {
                     <Route path="Login" element={<Login />} />
                     <Route path="SignUp" element={<SignUp />} />
                     <Route path="Universities" element={<Universities />} />
-                    <Route path="Students" element={<Students />} />
+                    <Route path="Students/:uniName" element={<Students />} />
                     <Route path="Profile" element={<Profile />} />
                     <Route path="StudentDetails" element={<StudentDetails />} />
 
