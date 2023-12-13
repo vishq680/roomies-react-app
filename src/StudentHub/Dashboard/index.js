@@ -71,7 +71,7 @@ function Dashboard() {
 
     useEffect(() => {
         // Fetch data when the component mounts
-        axios.get('https://roomies-node-app.onrender.com/api/users/univ')
+        axios.post('https://roomies-node-app.onrender.com/api/users/univ')
             .then(response => setUniversities(response.data))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
