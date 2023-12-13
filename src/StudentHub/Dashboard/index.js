@@ -11,7 +11,8 @@ function Dashboard() {
         withCredentials: true,
     });
     const navigate = useNavigate();
-    const {setSignOut} = useAuth();
+    const { setSignOut } = useAuth();
+    // console.log(uniName);
 
 
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -28,7 +29,6 @@ function Dashboard() {
             console.log(response.data);
             setSignOut();
             navigate('/StudentHub/Dashboard');
-
 
         } catch (error) {
             console.error(error.response.data);
@@ -66,7 +66,9 @@ function Dashboard() {
 
 
     const [universities, setUniversities] = useState([]);
-    const { isSignedIn } = useAuth();
+    const { isSignedIn, user } = useAuth();
+
+    const [students, setStudents] = useState([]);
 
 
     useEffect(() => {
@@ -75,6 +77,15 @@ function Dashboard() {
             .then(response => setUniversities(response.data))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
+
+    useEffect(() => {
+        // Fetch data when the component mounts
+        axios.post('https://roomies-node-app.onrender.com/api/users/`${user.university}`')
+            .then(response => setStudents(response.data))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
+
+
 
     return (
         <div>
@@ -178,16 +189,20 @@ function Dashboard() {
                         <h2 class="p-2">Popular Universities</h2>
                         <hr />
 
+
                         <div className="card-deck d-flex flex-row flex-wrap">
                             {universities.map((university, index) => (
-                                <div key={index} className="card m-2">
-                                    <img className="card-img-top" src={university.imageUrl} alt={university.name} />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{university.name}</h5>
+                                <Link to={{ pathname: `/StudentHub/Students`, state: { ...university.name } }}>
+                                    <div key={index} className="card m-2">
+                                        <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={university.name} />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{university.name}</h5>
+                                        </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
+
                     </div>
                     {
                         isSignedIn ? (
@@ -195,7 +210,7 @@ function Dashboard() {
                                 <br />
                                 <br />
 
-                                <h2>Recommended Universities</h2>
+                                <h2>Recommended Profiles</h2>
                                 <hr />
                                 <div className="card-deck d-flex flex-row flex-wrap">
                                     <div className="card">

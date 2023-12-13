@@ -15,6 +15,8 @@ import Profile from "./Profile";
 
 function StudentHub() {
 
+    // const [uniName, setUniName] = useState("");
+
     return (
 
         <div >
@@ -26,6 +28,7 @@ function StudentHub() {
                     <Route path="Dashboard" element={
                         <Dashboard />
                     } />
+                
                     <Route path="Login" element={<Login />} />
                     <Route path="SignUp" element={<SignUp />} />
                     <Route path="Universities" element={<Universities />} />

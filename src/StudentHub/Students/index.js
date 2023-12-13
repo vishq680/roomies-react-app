@@ -1,8 +1,27 @@
-import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { React, useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import './index.css'
+import axios from "axios";
+
 
 function Students() {
+    const location = useLocation();
+
+
+    const uniName = location.state?.data || 'Default Value';
+    // console.log(location.state)
+
+    const [students, setStudents] = useState([]);
+
+    // console.log(uniName);
+
+
+    useEffect(() => {
+        console.log(uniName);
+        axios.get(`https://roomies-node-app.onrender.com/api/users/${uniName}`)
+            .then(response => setStudents(response.data))
+            .catch(error => console.error('Error fetching data:', error));
+    }, []);
 
     return (
         <div>
@@ -34,15 +53,18 @@ function Students() {
                 <div>
                     <div>
                         <div className="card-deck d-flex flex-row flex-wrap">
-                            <div className="card">
-                                <img className="card-img-top" src="../../images/blue.jpeg" alt="Not Found" />
-                                <div className="card-body">
-                                    <h5 className="card-title">Student name</h5>
-                                    <p className="card-text">University Name</p>
-                                    <p className="card-text">Course Name</p>
-                                </div>
-                            </div>
+                            {students.map((students, index) => (
+                                <Link to={{ pathname: 'StudentHub/Students', state: { ...students.name } }}>
+                                    <div key={index} className="card m-2">
+                                        <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{students.name}</h5>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
                         </div>
+
                     </div>
                 </div>
             </div>

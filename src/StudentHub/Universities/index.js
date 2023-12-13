@@ -10,7 +10,6 @@ function Universities() {
         { rank: 1, name: 'Harvard University', country: 'USA' },
         { rank: 2, name: 'Stanford University', country: 'USA' },
         { rank: 3, name: 'MIT', country: 'USA' },
-        // Add more universities as needed
     ];
 
     return (
