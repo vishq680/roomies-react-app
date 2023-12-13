@@ -96,9 +96,11 @@ function Dashboard() {
 
     useEffect(() => {
 
-        axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
+        if (isSignedIn) {
+            axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
             .then(response => setStudents(response.data))
             .catch(error => console.error('Error fetching data:', error));
+        }
     }, []);
 
 
