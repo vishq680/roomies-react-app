@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         localStorage.setItem('isSignedIn', JSON.stringify(true));
         localStorage.setItem('user', JSON.stringify(userData));
-
+        console.log(user.data())
 
 
     };

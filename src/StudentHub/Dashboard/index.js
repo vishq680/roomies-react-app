@@ -11,7 +11,7 @@ function Dashboard() {
         withCredentials: true,
     });
     const navigate = useNavigate();
-    const {setSignOut} = useAuth();
+    const { setSignOut } = useAuth();
 
 
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -189,21 +189,25 @@ function Dashboard() {
                             ))}
                         </div>
                     </div>
-                    <div>
-                        <br />
-                        <br />
+                    {
+                        isSignedIn ? (
+                            <div>
+                                <br />
+                                <br />
 
-                        <h2>Recommended Universities</h2>
-                        <hr />
-                        <div className="card-deck d-flex flex-row flex-wrap">
-                            <div className="card">
-                                <img className="card-img-top" src="../../images/blue.jpeg" alt="Not Found" />
-                                <div className="card-body">
-                                    <h5 className="card-title">University Name</h5>
+                                <h2>Recommended Universities</h2>
+                                <hr />
+                                <div className="card-deck d-flex flex-row flex-wrap">
+                                    <div className="card">
+                                        <img className="card-img-top" src="../../images/blue.jpeg" alt="Not Found" />
+                                        <div className="card-body">
+                                            <h5 className="card-title">University Name</h5>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        ) : {}
+                    }
                 </div>
             </div>
         </div>
