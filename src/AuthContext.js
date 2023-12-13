@@ -6,24 +6,30 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isSignedIn, setIsSignedIn] = useState(false);
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState({});
+    let user;
 
 
     useEffect(() => {
         // Check localStorage for authentication status on component mount
         const storedIsSignedIn = localStorage.getItem('isSignedIn');
         if (storedIsSignedIn) {
-          setIsSignedIn(JSON.parse(storedIsSignedIn));
+            setIsSignedIn(JSON.parse(storedIsSignedIn));
         }
-      }, []);
+    }, []);
 
     const setSignIn = (userData) => {
+        // console.log(userData[0]);
+        // console.log(userData.type);
+
+        user = userData;
 
         setIsSignedIn(true);
-        setUser(userData);
+        // setUser({...userData[0]});
+
         localStorage.setItem('isSignedIn', JSON.stringify(true));
         localStorage.setItem('user', JSON.stringify(userData));
-        // console.log(user.data())
+        // console.log(user);
 
 
     };
@@ -31,12 +37,9 @@ export const AuthProvider = ({ children }) => {
     const setSignOut = () => {
 
         setIsSignedIn(false);
-        setUser(null);
+        // setUser(null);
         localStorage.removeItem('isSignedIn');
         localStorage.removeItem('user');
-
-
-
     };
 
 
@@ -44,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ isSignedIn, setSignIn, setSignOut, user }}>
+        <AuthContext.Provider value={{ isSignedIn, setSignIn, setSignOut }}>
             {children}
         </AuthContext.Provider>
     );

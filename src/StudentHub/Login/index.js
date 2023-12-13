@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useAuth } from "../../AuthContext";
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import AuthService from "../AuthService";
+
 
 
 
@@ -35,6 +37,7 @@ function Login() {
             else {
                 console.log('Sign-in successful');
                 setSignIn(response.data);
+                AuthService.saveUserDetails(response.data);
                 navigate('/StudentHub/Dashboard');
 
             }

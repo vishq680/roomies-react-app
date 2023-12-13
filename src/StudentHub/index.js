@@ -6,10 +6,10 @@ import { Provider } from "react-redux";
 import axios from "axios";
 import Login from "./Login";
 import Universities from "./Universities";
-import Students from "./Students";
 import SignUp from "./SignUp";
 import Profile from "./Profile";
-
+import Students from "./Students";
+import StudentDetails from "./StudentDetails";
 
 
 
@@ -34,6 +34,7 @@ function StudentHub() {
                     <Route path="Universities" element={<Universities />} />
                     <Route path="Students" element={<Students />} />
                     <Route path="Profile" element={<Profile />} />
+                    <Route path="StudentDetails" element={<StudentDetails />} />
 
                 </Routes>
 

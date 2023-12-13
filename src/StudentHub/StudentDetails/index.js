@@ -1,36 +1,22 @@
 import { React, useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import './index.css'
-import axios from 'axios';
+import axios from "axios";
 import { useAuth } from "../../AuthContext";
-import AuthService from "../AuthService";
 
 
-
-function Dashboard() {
-
+function StudentDetails(props) {
+    const location = useLocation();
     const request = axios.create({
         withCredentials: true,
     });
     const navigate = useNavigate();
     const { setSignOut } = useAuth();
-    // console.log(uniName);
-
-
-
-    const [isDropdownOpen, setDropdownOpen] = useState(false);
-    const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
-    const dropdownRef = useRef(null);
-
-    const toggleDropdown = () => {
-        setDropdownOpen(!isDropdownOpen);
-    };
 
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
-    };
-
+      };
 
     const handleSignOut = async () => {
         try {
@@ -43,6 +29,15 @@ function Dashboard() {
             console.error(error.response.data);
         }
     };
+
+    const [isDropdownOpen, setDropdownOpen] = useState(false);
+    const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+    const dropdownRef = useRef(null);
+
+    const toggleDropdown = () => {
+        setDropdownOpen(!isDropdownOpen);
+    };
+
 
     useEffect(() => {
         const updateDropdownPosition = () => {
@@ -73,35 +68,32 @@ function Dashboard() {
         }
     }, [isDropdownOpen]);
 
-
-    const [universities, setUniversities] = useState([]);
     const { isSignedIn, user } = useAuth();
 
+
+
+
+
+
+
+
+
+    const uniName = location.state?.data || 'arizona state university';
+    // console.log(location.state)
+
     const [students, setStudents] = useState([]);
-    const [userDetails, setUserDetails] = useState(null);
+    // const { uniName} = props.location.state;
+    console.log(uniName)
 
-
-    const storedUserDetails = AuthService.getUserDetails();
-    console.log(storedUserDetails[0].university)
-
-
+    // console.log(uniName);
 
 
     useEffect(() => {
-        // Fetch data when the component mounts
-        axios.post('https://roomies-node-app.onrender.com/api/users/univ')
-            .then(response => setUniversities(response.data))
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
-
-    useEffect(() => {
-
-        axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
+        console.log(uniName);
+        axios.get(`https://roomies-node-app.onrender.com/api/users/${uniName}`)
             .then(response => setStudents(response.data))
             .catch(error => console.error('Error fetching data:', error));
     }, []);
-
-
 
     return (
         <div>
@@ -173,46 +165,16 @@ function Dashboard() {
                 </div>
             </nav>
 
-
-            <div className="container d-flex justify-content-center align-items-center vh-10 search">
-                <div className="row">
-                    <div className="col-md-12 offset-md-2">
-                        <div className="input-group mb-3">
-                            <input
-                                type="text"
-                                className="form-control "
-                                placeholder="Search University"
-                                aria-label="Search"
-                                aria-describedby="basic-addon2"
-                            />
-                            <div className="input-group-append">
-                                <Link to={`/StudentHub/Students`}>
-                                    <button className="btn btn-primary" type="button">
-                                        Search
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-
             <div>
                 <div>
                     <div>
-                        <h2 class="p-2">Popular Universities</h2>
-                        <hr />
-
-
                         <div className="card-deck d-flex flex-row flex-wrap">
-                            {universities.map((university, index) => (
-                                <Link class='no-underline' to={{ pathname: `/StudentHub/Students`, state: { data: `${university.name}` } }}>
+                            {students.map((students, index) => (
+                                <Link class='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }}>
                                     <div key={index} className="card m-2">
-                                        <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={university.name} />
+                                        <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
                                         <div className="card-body">
-                                            <h5 className="card-title">{capitalizeFirstLetter(university.name)}</h5>
+                                            <h5 className="card-title">{capitalizeFirstLetter(students.firstname)} {capitalizeFirstLetter(students.firstname)}</h5>
                                         </div>
                                     </div>
                                 </Link>
@@ -220,34 +182,9 @@ function Dashboard() {
                         </div>
 
                     </div>
-                    {
-                        isSignedIn ? (
-                            <div>
-                                <br />
-                                <br />
-
-                                <h2>Recommended Profiles</h2>
-                                <hr />
-                                <div className="card-deck d-flex flex-row flex-wrap">
-                                    {students.map((students, index) => (
-                                        <Link class='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }}>
-                                            <div key={index} className="card m-2">
-                                                <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
-                                                <div className="card-body">
-                                                    <h5 className="card-title">{capitalizeFirstLetter(students.firstname)} {capitalizeFirstLetter(students.lastname)}</h5>
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        ) : (
-                            <div></div>
-                        )
-                    }
                 </div>
             </div>
         </div>
     );
 }
-export default Dashboard;
+export default StudentDetails;
