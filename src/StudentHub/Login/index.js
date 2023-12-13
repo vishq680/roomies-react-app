@@ -29,8 +29,9 @@ function Login() {
             const response = await request.post('https://roomies-node-app.onrender.com/api/users/signin', { username, password });
             console.log(response.data);
             if (response.data.length === 0) {
-                console.log('Sign-in Unsuccessful');
-                
+                console.error('Error signing in:', error.response.data.message);
+                alert('Invalid credentials. Please try again.');
+
             }
             else {
                 console.log('Sign-in successful');
