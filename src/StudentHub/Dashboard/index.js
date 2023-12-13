@@ -11,7 +11,7 @@ function Dashboard() {
         withCredentials: true,
     });
     const navigate = useNavigate();
-    const { setSignOut } = useAuth();
+    const {setSignOut} = useAuth();
 
 
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -206,7 +206,9 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                        ) : {}
+                        ) : (
+                            <div></div>
+                        )
                     }
                 </div>
             </div>
