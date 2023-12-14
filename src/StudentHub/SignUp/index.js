@@ -3,6 +3,7 @@ import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../AuthContext';
+import AuthService from '../AuthService';
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -13,11 +14,11 @@ const SignUpForm = () => {
     university: '',
     major: '',
     term: '',
-    year: '',
+    year: 0,
     smoking: false,
     drinking: false,
     veg: false,
-    Age: '',
+    age: 0,
     shared: false,
     hobbies: [],
     degree: '',
@@ -36,16 +37,35 @@ const SignUpForm = () => {
   const { isSignedIn, setSignIn } = useAuth();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: name === 'hobbies' || name === 'languages' ? value.split(',').map(item => item.trim()) : value,
-    }));
+    const { name, value, type, checked } = e.target;
+
+    setFormData((prevData) => {
+      switch (name) {
+        case 'hobbies':
+        case 'languages':
+          return {
+            ...prevData,
+            [name]: value.split(',').map(item => item.trim()),
+          };
+        case 'age':
+        case 'year':
+          return {
+            ...prevData,
+            [name]: parseInt(value, 10) || 0,
+          };
+        default:
+          return {
+            ...prevData,
+            [name]: type === 'checkbox' ? checked : value,
+          };
+      }
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("Form Data: ",JSON.stringify(formData));
     try {
       // Send a POST request to the server
       const response = await axios.post('https://roomies-node-app.onrender.com/api/users/signup', formData);
@@ -61,11 +81,11 @@ const SignUpForm = () => {
         university: '',
         major: '',
         term: '',
-        year: '',
+        year: 0,
         smoking: false,
         drinking: false,
         veg: false,
-        Age: '',
+        age: 0,
         shared: false,
         hobbies: [],
         degree: '',
@@ -80,6 +100,7 @@ const SignUpForm = () => {
 
       alert('User signed up successfully!');
       setSignIn(response.data);
+      AuthService.saveUserDetails(response.data);
       navigate('/StudentHub/Dashboard');
     } catch (error) {
       console.error('Error signing up:', error);
@@ -181,7 +202,7 @@ const SignUpForm = () => {
             <Form.Group controlId="formYear">
               <Form.Label>Year</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="Enter your Year"
                 name="year"
                 value={formData.year}
@@ -198,7 +219,7 @@ const SignUpForm = () => {
                   label="Yes"
                   name="smoking"
                   value="true"
-                  checked={formData.smoking === "true"}
+                  checked={formData.smoking === true}
                   onChange={handleChange}
                   required
                 />
@@ -207,7 +228,7 @@ const SignUpForm = () => {
                   label="No"
                   name="smoking"
                   value="false"
-                  checked={formData.smoking === "false"}
+                  checked={formData.smoking === false}
                   onChange={handleChange}
                   required
                 />
@@ -222,7 +243,7 @@ const SignUpForm = () => {
                   label="Yes"
                   name="drinking"
                   value="true"
-                  checked={formData.drinking === "true"}
+                  checked={formData.drinking === true}
                   onChange={handleChange}
                   required
                 />
@@ -231,7 +252,7 @@ const SignUpForm = () => {
                   label="No"
                   name="drinking"
                   value="false"
-                  checked={formData.drinking === "false"}
+                  checked={formData.drinking === false}
                   onChange={handleChange}
                   required
                 />
@@ -246,7 +267,7 @@ const SignUpForm = () => {
                   label="Yes"
                   name="veg"
                   value="true"
-                  checked={formData.veg === "true"}
+                  checked={formData.veg === true}
                   onChange={handleChange}
                   required
                 />
@@ -255,7 +276,7 @@ const SignUpForm = () => {
                   label="No"
                   name="veg"
                   value="false"
-                  checked={formData.veg === "false"}
+                  checked={formData.veg === false}
                   onChange={handleChange}
                   required
                 />
@@ -265,10 +286,10 @@ const SignUpForm = () => {
             <Form.Group controlId="formAge">
               <Form.Label>Age</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 placeholder="Enter your Age"
-                name="Age"
-                value={formData.Age}
+                name="age"
+                value={formData.age}
                 onChange={handleChange}
                 required
               />
@@ -282,7 +303,7 @@ const SignUpForm = () => {
                   label="Yes"
                   name="shared"
                   value="true"
-                  checked={formData.shared === "true"}
+                  checked={formData.shared === true}
                   onChange={handleChange}
                   required
                 />
@@ -291,7 +312,7 @@ const SignUpForm = () => {
                   label="No"
                   name="shared"
                   value="false"
-                  checked={formData.shared === "false"}
+                  checked={formData.shared === false}
                   onChange={handleChange}
                   required
                 />

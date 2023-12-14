@@ -29,9 +29,10 @@ function Dashboard() {
 
     const capitalizeFirstLetter = (str) => {
         return str
-        .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');    };
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
 
 
     const handleSignOut = async () => {
@@ -102,9 +103,16 @@ function Dashboard() {
     useEffect(() => {
 
         if (isSignedIn) {
-            axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
-            .then(response => setStudents(response.data))
-            .catch(error => console.error('Error fetching data:', error));
+            try {
+
+
+                axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
+                    .then(response => setStudents(response.data))
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+            catch {
+                console.log("No students found from university");
+            }
         }
     }, []);
 
@@ -209,7 +217,7 @@ function Dashboard() {
 
                         <div className="card-deck d-flex flex-row flex-wrap">
                             {universities.map((university, index) => (
-                                <Link class='no-underline' to={ `/StudentHub/Students/${universities.name}`}>
+                                <Link class='no-underline' to={`/StudentHub/Students/${universities.name}`}>
                                     <div key={index} className="card m-2">
                                         <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={university.name} />
                                         <div className="card-body">
