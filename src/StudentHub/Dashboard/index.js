@@ -36,16 +36,30 @@ function Dashboard() {
 
 
     const handleSignOut = async () => {
-        try {
-            const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
-            console.log(response.data);
-            setSignOut();
-            AuthService.clearUserDetails();
+        if (isAdmin) {
+            try {
+                const response = await request.post('https://roomies-node-app.onrender.com/api/admin/users/signout');
+                // console.log(response.data);
+                setSignOut();
+                AuthService.clearUserDetails();
+                navigate('/StudentHub/Dashboard');
 
-            navigate('/StudentHub/Dashboard');
+            } catch (error) {
+                console.error(error.response.data);
+            }
+        }
+        else {
+            try {
+                const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
+                // console.log(response.data);
+                setSignOut();
+                AuthService.clearUserDetails();
 
-        } catch (error) {
-            console.error(error.response.data);
+                navigate('/StudentHub/Dashboard');
+
+            } catch (error) {
+                console.error(error.response.data);
+            }
         }
     };
 
@@ -80,7 +94,7 @@ function Dashboard() {
 
 
     const [universities, setUniversities] = useState([]);
-    const { isSignedIn, user } = useAuth();
+    const { isSignedIn, user, isAdmin } = useAuth();
 
     const [students, setStudents] = useState([]);
     const [userDetails, setUserDetails] = useState(null);
@@ -102,10 +116,8 @@ function Dashboard() {
 
     useEffect(() => {
 
-        if (isSignedIn) {
+        if (isSignedIn && !isAdmin) {
             try {
-
-
                 axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
                     .then(response => setStudents(response.data))
                     .catch(error => console.error('Error fetching data:', error));
@@ -230,7 +242,7 @@ function Dashboard() {
 
                     </div>
                     {
-                        isSignedIn ? (
+                        isSignedIn  && !isAdmin ? (
                             <div>
                                 <br />
                                 <br />
