@@ -1,18 +1,55 @@
 import { React, useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import './index.css'
 import axios from "axios";
 import { useAuth } from "../../AuthContext";
 import AuthService from "../AuthService";
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
 
 function StudentDetails(props) {
-    const location = useLocation();
+
+    const [student, setStudent] = useState({});
+
+
+    const {id} = useParams();
+
+     console.log("id: ", id)
+
+
+
+
     const request = axios.create({
         withCredentials: true,
     });
     const navigate = useNavigate();
     const { setSignOut } = useAuth();
+
+    useEffect(() => {
+        console.log("sdfs")
+
+        const getStudentDetails = async () =>{
+
+            const response = await request.post(`https://roomies-node-app.onrender.com/api/users/${id}`);
+            setStudent({...response.data})
+            console.log("student details: ", response.data)
+        }
+
+        getStudentDetails();
+    }, []);
+
+    // const {id} = useParams();
+
+    //  console.log("id: ", id)
+
+
+
+
+    // const request = axios.create({
+    //     withCredentials: true,
+    // });
+    // const navigate = useNavigate();
+    // const { setSignOut } = useAuth();
 
 
     const capitalizeFirstLetter = (str) => {
@@ -44,6 +81,11 @@ function StudentDetails(props) {
     };
 
 
+
+
+
+
+
     useEffect(() => {
         const updateDropdownPosition = () => {
             if (dropdownRef.current) {
@@ -73,7 +115,7 @@ function StudentDetails(props) {
         }
     }, [isDropdownOpen]);
 
-    const { isSignedIn, user } = useAuth();
+    const { isSignedIn} = useAuth();
 
 
 
@@ -81,27 +123,11 @@ function StudentDetails(props) {
 
 
 
-
-
-    const uniName = location.state?.data || 'arizona state university';
-    // console.log(location.state)
-
-    const [students, setStudents] = useState([]);
-    // const { uniName} = props.location.state;
-    console.log(uniName)
-
-    // console.log(uniName);
-
-
-    useEffect(() => {
-        console.log(uniName);
-        axios.get(`https://roomies-node-app.onrender.com/api/users/${uniName}`)
-            .then(response => setStudents(response.data))
-            .catch(error => console.error('Error fetching data:', error));
-    }, []);
-
+console.log("fdasfsaf: ", JSON.stringify(student))
     return (
-        <div>
+  
+       
+        <div className="w-100">
             <nav class="navbar navbar-dark navbar-expand-md bg-dark justify-content-center">
                 <a href="/" class="navbar-brand d-flex w-50 mr-auto p-2">Roomies</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
@@ -169,26 +195,270 @@ function StudentDetails(props) {
                     </ul>
                 </div>
             </nav>
+            <br/>
+            <br/>
 
-            <div>
-                <div>
-                    <div>
-                        <div className="card-deck d-flex flex-row flex-wrap">
-                            {students.map((students, index) => (
-                                <Link class='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }}>
-                                    <div key={index} className="card m-2">
-                                        <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
-                                        <div className="card-body">
-                                            <h5 className="card-title">{capitalizeFirstLetter(students.firstname)} {capitalizeFirstLetter(students.firstname)}</h5>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
+            <Container class='formN'>
 
-                    </div>
-                </div>
-            </div>
+                    <Row className="justify-content-md-center">
+                        <Col md={6}>
+                        
+                        <Form >
+                            <Form.Group controlId="formFirstName">
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={(student["0"] !== undefined)?student["0"].firstname:''}
+                                
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formLastName">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control
+
+                                value={(student["0"] !== undefined)?student["0"].lastname:''}
+
+                            />
+                            </Form.Group>
+
+                             <Form.Group controlId="formState">
+                            <Form.Label>State</Form.Label>
+                            <Form.Control
+
+                                value={(student["0"] !== undefined)? student["0"].state: ''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formCountry">
+                            <Form.Label>Country</Form.Label>
+                            <Form.Control
+
+                                value={(student["0"] !== undefined)?student["0"].country:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formUniversity">
+                            <Form.Label>University</Form.Label>
+                            <Form.Control
+
+                                value={(student["0"] !== undefined)?student["0"].university:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formMajor">
+                            <Form.Label>Major</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)? student["0"].major:''}
+                             
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formTerm">
+                            <Form.Label>Term</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].term:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formYear">
+                            <Form.Label>Year</Form.Label>
+                            <Form.Control
+                                type="number"
+
+                                value={(student["0"] !== undefined)?student["0"].year:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formSmoking">
+                            <Form.Label>Smoking</Form.Label>
+                            <div>
+                                <Form.Check
+                                type="radio"
+
+                                value="true"
+                                checked={(student["0"] !== undefined)?student["0"].smoking:'' === true}
+
+                                />
+                                {/* <Form.Check
+                                type="radio"
+
+                                value="false"
+                                checked={student["0"].smoking === false}
+
+                                /> */}
+                            </div>
+                            </Form.Group>
+
+                            <Form.Group controlId="formDrinking">
+                            <Form.Label>Drinking</Form.Label>
+                            <div>
+                                <Form.Check
+                                type="radio"
+
+                                value="true"
+                                checked={(student["0"] !== undefined)?student["0"].drinking:'' === true}
+
+                                />
+                                {/* <Form.Check
+                                type="radio"
+
+                                value="false"
+                                checked={student["0"].drinking === false}
+
+                                /> */}
+                            </div>
+                            </Form.Group>
+
+                            <Form.Group controlId="formVeg">
+                            <Form.Label>Veg</Form.Label>
+                            <div>
+                                <Form.Check
+                                type="radio"
+
+                                value="true"
+                                checked={(student["0"] !== undefined)?student["0"].veg:'' === true}
+
+                                />
+                                {/* <Form.Check
+                                type="radio"
+
+                                value="false"
+                                checked={student["0"].veg === false}
+
+                                /> */}
+                            </div>
+                            </Form.Group>
+
+                            <Form.Group controlId="formAge">
+                            <Form.Label>Age</Form.Label>
+                            <Form.Control
+                                type="number"
+
+                                value={(student["0"] !== undefined)?student["0"].age:0}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formShared">
+                            <Form.Label>Shared</Form.Label>
+                            <div>
+                                <Form.Check
+                                type="radio"
+
+                                value="true"
+                                checked={(student["0"] !== undefined)?student["0"].shared:'' === true}
+ 
+                                />
+                                {/* <Form.Check
+                                type="radio"
+                                value="false"
+                                checked={student["0"].shared === false}
+
+                                /> */}
+                            </div>
+                            </Form.Group>
+
+                            <Form.Group controlId="formHobbies">
+                            <Form.Label>Hobbies</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].hobbies.join(', '):''}
+
+                            />
+                            {/* <Form.Text className="text-muted">
+                                Enter your hobbies separated by commas.
+                            </Form.Text> */}
+                            </Form.Group>
+
+                            <Form.Group controlId="formDegree">
+                            <Form.Label>Degree</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].degree:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formMail">
+                            <Form.Label>Mail</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].mail:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formLanguages">
+                            <Form.Label>Languages</Form.Label>
+                            <Form.Control
+                                type="text"
+       
+                                value={(student["0"] !== undefined)?student["0"].languages.join(', '):''}
+
+                            />
+    
+                            </Form.Group>
+
+                            <Form.Group controlId="formAbout">
+                            <Form.Label>About</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].about:''}
+
+                            />
+                            </Form.Group>
+
+                            
+
+                            <Form.Group controlId="formUGUniversity">
+                            <Form.Label>Undergraduate University</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].ug_univ:''}
+
+                            />
+                            </Form.Group>
+
+                            <Form.Group controlId="formPhone">
+                            <Form.Label>Phone</Form.Label>
+                            <Form.Control
+                                type="text"
+
+                                value={(student["0"] !== undefined)?student["0"].phone:''}
+
+                            />
+                            </Form.Group>
+
+                            <Button variant="primary" type="submit">
+                            Sign Up
+                            </Button>{/**/}
+                        </Form>
+                        </Col>
+                    </Row> 
+            </Container> 
+
+
+
+
+
+
         </div>
     );
 }

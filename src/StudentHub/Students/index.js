@@ -175,11 +175,13 @@ function Students(props) {
                     <div>
                         <div className="card-deck d-flex flex-row flex-wrap">
                             {students.map((students, index) => (
-                                <Link class='no-underline' to={{ pathname: `/StudentHub/StudentDetails`, state: { ...students.name } }}>
+                                <Link class='no-underline' to={{ pathname: `/StudentHub/StudentDetails/${students.id}`, state: { ...students.name } }}
+                                
+                                >
                                     <div key={index} className="card m-2">
                                         <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
                                         <div className="card-body">
-                                            <h5 className="card-title">{capitalizeFirstLetter(students.firstname)} {capitalizeFirstLetter(students.firstname)}</h5>
+                                            <h5 className="card-title">{capitalizeFirstLetter(students.firstname)} {capitalizeFirstLetter(students.lastname)}</h5>
                                         </div>
                                     </div>
                                 </Link>
