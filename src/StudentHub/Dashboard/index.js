@@ -99,14 +99,42 @@ function Dashboard() {
     }, []);
 
 
+    const [Restaurants, setRestaurants] = useState([]);
+
     useEffect(() => {
 
-        if (isSignedIn) {
-            axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
-            .then(response => setStudents(response.data))
-            .catch(error => console.error('Error fetching data:', error));
+        const getProfiles = async () =>{
+
+            if (isSignedIn) {
+                await axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
+                .then(response => setStudents(response.data))
+                .catch(error => console.error('Error fetching data:', error));
+            }
         }
+
+        getProfiles();
+
+
+
     }, []);
+
+
+
+    useEffect(() =>{
+
+        const getRestaurantData = async () =>{
+            if (isSignedIn) {
+                await axios.get(`https://roomies-node-app.onrender.com/api/users/restaurants/brookline`)
+                .then(response => setRestaurants(response.data))
+                .catch(error => console.error('Error fetching data:', error));
+            }
+        }
+
+        getRestaurantData();
+
+
+
+    }, [])
 
 
 
@@ -222,6 +250,7 @@ function Dashboard() {
                         </div>
 
                     </div>
+                    <div>
                     {
                         isSignedIn ? (
                             <div>
@@ -230,9 +259,9 @@ function Dashboard() {
                                 <hr />
                                 <h2>Recommended Profiles</h2>
                                 
-                                <div className="card-deck d-flex flex-row flex-wrap">
+                                <div className="card-deck d-flex flex-row flex-wrap"> 
                                     {students.map((students, index) => (
-                                        <Link className='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }}>
+                                        <Link className='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }} key={students.id}>
                                             <div key={index} className="card m-2">
                                                 <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
                                                 <div className="card-body">
@@ -247,6 +276,39 @@ function Dashboard() {
                             <div></div>
                         )
                     }
+                    </div>
+                    <div>
+                    {
+                        isSignedIn ? (
+                            <div>
+                                <br />
+                                <br />
+                                <hr />
+                                <h2>Recommended Restaurants</h2>
+                                
+                                <div className="card-deck d-flex flex-row flex-wrap"> 
+                                    {Restaurants.map((restaurant, index) => (
+                                        <Link className='no-underline' key={restaurant.id}>
+                                            <div key={index} className="card m-2">
+                                                <img className="card-img-top" src={restaurant.image_url} alt={restaurant.name} />
+                                                <div className="card-body">
+                                                    <h5 className="card-title">{capitalizeFirstLetter(restaurant.name)}</h5>
+                                                    <p>{restaurant.rating}</p>
+                                                    <p>{restaurant.address}</p>
+                                                    <p>{restaurant.review_count}</p>
+                                                    <p>{restaurant.phone}</p>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div></div>
+                        )
+                    }
+                    </div>
+                    
                 </div>
             </div>
         </div>
