@@ -145,6 +145,8 @@ function Dashboard() {
 
     useEffect(() =>{
 
+
+
         const getRestaurantData = async () =>{
 
             const univ = storedUserDetails[0].university;
@@ -172,7 +174,7 @@ function Dashboard() {
                 place = "new york";
             }
 
-            if (isSignedIn) {
+            if (isSignedIn && !isAdmin) {
                 await axios.get(`https://roomies-node-app.onrender.com/api/users/restaurants/${place}`)
                 .then(response => setRestaurants(response.data))
                 .catch(error => console.error('Error fetching data:', error));
@@ -368,7 +370,7 @@ function Dashboard() {
                     </div>
                     <div>
                     {
-                        isSignedIn ? (
+                        isSignedIn && !isAdmin ? (
                             <div>
                                 <br />
                                 <br />
