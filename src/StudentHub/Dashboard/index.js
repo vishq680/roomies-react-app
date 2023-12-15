@@ -29,22 +29,37 @@ function Dashboard() {
 
     const capitalizeFirstLetter = (str) => {
         return str
-        .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');    };
+            .split(' ')
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
 
 
     const handleSignOut = async () => {
-        try {
-            const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
-            console.log(response.data);
-            setSignOut();
-            AuthService.clearUserDetails();
+        if (isAdmin) {
+            try {
+                const response = await request.post('https://roomies-node-app.onrender.com/api/admin/users/signout');
+                // console.log(response.data);
+                setSignOut();
+                AuthService.clearUserDetails();
+                navigate('/StudentHub/Dashboard');
 
-            navigate('/StudentHub/Dashboard');
+            } catch (error) {
+                console.error(error.response.data);
+            }
+        }
+        else {
+            try {
+                const response = await request.post('https://roomies-node-app.onrender.com/api/users/signout');
+                // console.log(response.data);
+                setSignOut();
+                AuthService.clearUserDetails();
 
-        } catch (error) {
-            console.error(error.response.data);
+                navigate('/StudentHub/Dashboard');
+
+            } catch (error) {
+                console.error(error.response.data);
+            }
         }
     };
 
@@ -79,7 +94,7 @@ function Dashboard() {
 
 
     const [universities, setUniversities] = useState([]);
-    const { isSignedIn, user } = useAuth();
+    const { isSignedIn, user, isAdmin } = useAuth();
 
     const [students, setStudents] = useState([]);
     const [userDetails, setUserDetails] = useState(null);
@@ -103,13 +118,21 @@ function Dashboard() {
 
     useEffect(() => {
 
+
         const getProfiles = async () =>{
 
-            if (isSignedIn) {
+
+        if (isSignedIn && !isAdmin) {
+            try {
                 await axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
-                .then(response => setStudents(response.data))
-                .catch(error => console.error('Error fetching data:', error));
+                    .then(response => setStudents(response.data))
+                    .catch(error => console.error('Error fetching data:', error));
             }
+            catch {
+                console.log("No students found from university");
+
+            }
+        }
         }
 
         getProfiles();
@@ -231,30 +254,62 @@ function Dashboard() {
             </nav>
 
 
-            <div className="container d-flex justify-content-center align-items-center vh-10 search">
-                <div className="row">
-                    <div className="col-md-12 offset-md-2">
-                        <div className="input-group mb-3">
-                            <input
-                                type="text"
-                                className="form-control "
-                                placeholder="Search University"
-                                aria-label="Search"
-                                aria-describedby="basic-addon2"
-                                value={searchText}
-                                onChange={(e) =>{setSearchText(e.target.value)}}
-                            />
-                            <div className="input-group-append">
-                                <Link to={`/StudentHub/Students/${searchText}`}>
-                                    <button className="btn btn-primary" type="button">
-                                        Search
-                                    </button>
-                                </Link>
+
+           
+
+            {
+                isAdmin ? (
+                    <div className="container d-flex justify-content-center align-items-center vh-10 search">
+                        <div className="row">
+                            <div className="col-md-12 offset-md-2">
+                                <div className="input-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control "
+                                        placeholder="Search Student ID"
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon2"
+                                    />
+                                    <div className="input-group-append">
+                                        <Link to={`/StudentHub/StudentDetails`}>
+                                            <button className="btn btn-primary" type="button">
+                                                Search
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                ) : ( 
+                        <div className="container d-flex justify-content-center align-items-center vh-10 search">
+                        <div className="row">
+                            <div className="col-md-12 offset-md-2">
+                                <div className="input-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control "
+                                        placeholder="Search University"
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon2"
+                                        value={searchText}
+                                        onChange={(e) =>{setSearchText(e.target.value)}}
+                                    />
+                                    <div className="input-group-append">
+                                        <Link to={`/StudentHub/Students/${searchText}`}>
+                                            <button className="btn btn-primary" type="button">
+                                                Search
+                                            </button>
+                                        </Link>
+  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
 
 
 
@@ -268,7 +323,11 @@ function Dashboard() {
 
                         <div className="card-deck d-flex flex-row flex-wrap">
                             {universities.map((university, index) => (
+
                                 <Link key={university.id} className='no-underline' to={ `/StudentHub/Students/${university.name}`}>
+
+                           
+
                                     <div key={index} className="card m-2">
                                         <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={university.name} />
                                         <div className="card-body">
@@ -282,7 +341,7 @@ function Dashboard() {
                     </div>
                     <div>
                     {
-                        isSignedIn ? (
+                        isSignedIn && !isAdmin ? (
                             <div>
                                 <br />
                                 <br />

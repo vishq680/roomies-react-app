@@ -9,7 +9,14 @@ function Universities() {
     const universities = [
         { rank: 1, name: 'Harvard University', country: 'USA' },
         { rank: 2, name: 'Stanford University', country: 'USA' },
-        { rank: 3, name: 'MIT', country: 'USA' },
+        { rank: 3, name: 'Massachusetts institute of Technology', country: 'USA' },
+        {rank: 4, name: 'Princeton University', country: 'USA'},
+        {rank: 5, name: 'Yale University', country: 'USA'},
+        {rank: 6, name: 'Cambidge University', country: 'UK'},
+        {rank: 7, name: 'Caltech', country: 'USA'},
+        {rank: 8, name: 'University of California, Berkeley', country: 'USA'},
+        {rank: 9, name: 'Georgia Institute of Technology', country: 'USA'},
+        {rank: 10, name: 'University of Illionois, Urbana Champagne', country: 'USA'},
     ];
 
     return (

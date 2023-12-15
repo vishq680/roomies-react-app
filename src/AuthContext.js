@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isSignedIn, setIsSignedIn] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     // const [user, setUser] = useState({});
     let user;
 
@@ -17,6 +18,10 @@ export const AuthProvider = ({ children }) => {
             setIsSignedIn(JSON.parse(storedIsSignedIn));
         }
     }, []);
+
+    const setAdmin = () => {
+        setIsAdmin(true);
+    }
 
     const setSignIn = (userData) => {
         // console.log(userData[0]);
@@ -38,6 +43,9 @@ export const AuthProvider = ({ children }) => {
 
         setIsSignedIn(false);
         // setUser(null);
+        if(isAdmin === true) {
+            setIsAdmin(false);
+        }
         localStorage.removeItem('isSignedIn');
         localStorage.removeItem('user');
     };
@@ -47,7 +55,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ isSignedIn, setSignIn, setSignOut }}>
+        <AuthContext.Provider value={{ isSignedIn, setSignIn, setSignOut,isAdmin,setAdmin }}>
             {children}
         </AuthContext.Provider>
     );

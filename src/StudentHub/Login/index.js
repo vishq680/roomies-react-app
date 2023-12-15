@@ -20,34 +20,59 @@ function Login() {
 
 
     const navigate = useNavigate();
-    const { isSignedIn, setSignIn } = useAuth();
+    const { isSignedIn, setSignIn, isAdmin, setAdmin } = useAuth();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [selectedRole, setSelectedRole] = useState('user');
 
 
     const handleSignIn = async () => {
-        try {
-            const response = await request.post('https://roomies-node-app.onrender.com/api/users/signin', { username, password });
-            console.log(response.data);
-            if (response.data.length === 0) {
-                console.log('Error signing in:');
+
+        if (selectedRole == "admin") {
+            console.log("Admin")
+            try {
+                const response = await request.post('https://roomies-node-app.onrender.com/api/admin/users/signin', { username, password });
+                console.log(response.data);
+                if (response.data.length === 0) {
+                    console.log('Error signing in:');
+                    alert('Invalid credentials. Please try again.');
+                }
+                else {
+                    console.log('Sign-in successful');
+                    setSignIn(response.data);
+                    AuthService.saveUserDetails(response.data);
+                    navigate('/StudentHub/Dashboard');
+                    setAdmin();
+                }
+            } catch (error) {
+                console.error('Error signing in:', error.response.data.message);
                 alert('Invalid credentials. Please try again.');
             }
-            else {
-                console.log('Sign-in successful');
-                setSignIn(response.data);
-                AuthService.saveUserDetails(response.data);
-                navigate('/StudentHub/Dashboard');
-
-            }
-
-
-        } catch (error) {
-            console.error('Error signing in:', error.response.data.message);
-            alert('Invalid credentials. Please try again.');
         }
-    };
+
+        else {
+            try {
+                const response = await request.post('https://roomies-node-app.onrender.com/api/users/signin', { username, password });
+                console.log(response.data);
+                if (response.data.length === 0) {
+                    console.log('Error signing in:');
+                    alert('Invalid credentials. Please try again.');
+                }
+                else {
+                    console.log('Sign-in successful');
+                    setSignIn(response.data);
+                    AuthService.saveUserDetails(response.data);
+                    navigate('/StudentHub/Dashboard');
+                }
+            } catch (error) {
+                console.error('Error signing in:', error.response.data.message);
+                alert('Invalid credentials. Please try again.');
+            }
+        };
+
+    }
+
 
     return (
 
@@ -67,6 +92,15 @@ function Login() {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
+
+                        <Form.Group controlId="formRole">
+                            <Form.Label>Login As</Form.Label>
+                            <Form.Control as="select" value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </Form.Control>
+                        </Form.Group>
+
 
                         <Button variant="primary" onClick={handleSignIn}>
                             Sign In
