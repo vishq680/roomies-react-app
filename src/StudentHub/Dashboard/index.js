@@ -188,6 +188,7 @@ function Dashboard() {
     }, [])
 
     const [searchText, setSearchText] = useState("");
+    const [idText, setIdText] = useState("")
 
 
 
@@ -271,9 +272,11 @@ function Dashboard() {
                                         placeholder="Search Student ID"
                                         aria-label="Search"
                                         aria-describedby="basic-addon2"
+                                        value={idText}
+                                        onChange={(e) =>{setIdText(e.target.value)}}
                                     />
                                     <div className="input-group-append">
-                                        <Link to={`/StudentHub/StudentDetails`}>
+                                        <Link to={`/StudentHub/StudentDetails/${idText}`}>
                                             <button className="btn btn-primary" type="button">
                                                 Search
                                             </button>
@@ -352,7 +355,7 @@ function Dashboard() {
                                 
                                 <div className="card-deck d-flex flex-row flex-wrap"> 
                                     {students.map((students, index) => (
-                                        <Link className='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }} key={students.id}>
+                                        <Link className='no-underline' to={{ pathname: `/StudentHub/StudentDetails/${students.id}`, state: { ...students.name } }} key={students.id}>
                                             <div key={index} className="card m-2">
                                                 <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
                                                 <div className="card-body">
