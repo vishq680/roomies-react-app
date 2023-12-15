@@ -12,26 +12,41 @@ function StudentDetails(props) {
     const [student, setStudent] = useState({});
 
 
-    const {id} = useParams();
+    const { id } = useParams();
 
-     console.log("id: ", id)
+    console.log("id: ", id)
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleEditButtonClick = () => {
+        setIsEditing(true);
+    };
 
 
+    const handleDeleteButtonClick = async () => {
+        try {
+            const response = await request.delete(`https://roomies-node-app.onrender.com/api/admin/users/${id}`);
+            console.log(response.data);
+            navigate('/StudentHub/Dashboard');
+        } catch (error) {
+            console.error('Error deleting student:', error.response.data);
+        }
+    };
 
 
     const request = axios.create({
         withCredentials: true,
     });
     const navigate = useNavigate();
-    const { setSignOut } = useAuth();
+    const { setSignOut, isAdmin } = useAuth();
 
     useEffect(() => {
         console.log("sdfs")
 
-        const getStudentDetails = async () =>{
+        const getStudentDetails = async () => {
 
             const response = await request.post(`https://roomies-node-app.onrender.com/api/users/${id}`);
-            setStudent({...response.data})
+            setStudent({ ...response.data })
             console.log("student details: ", response.data)
         }
 
@@ -83,6 +98,16 @@ function StudentDetails(props) {
 
 
 
+    const handleUpdateButtonClick = async () => {
+        try {
+            const response = await request.put(`https://roomies-node-app.onrender.com/api/admin/users/${id}`, student[0]);
+            console.log(response.data);
+
+            setIsEditing(false);
+        } catch (error) {
+            console.error('Error updating student details:', error.response.data);
+        }
+    };
 
 
 
@@ -115,7 +140,7 @@ function StudentDetails(props) {
         }
     }, [isDropdownOpen]);
 
-    const { isSignedIn} = useAuth();
+    const { isSignedIn } = useAuth();
 
 
 
@@ -123,10 +148,10 @@ function StudentDetails(props) {
 
 
 
-console.log("fdasfsaf: ", JSON.stringify(student))
+    console.log("fdasfsaf: ", JSON.stringify(student))
     return (
-  
-       
+
+
         <div className="w-100">
             <nav class="navbar navbar-dark navbar-expand-md bg-dark justify-content-center">
                 <a href="/" class="navbar-brand d-flex w-50 mr-auto p-2">Roomies</a>
@@ -195,264 +220,318 @@ console.log("fdasfsaf: ", JSON.stringify(student))
                     </ul>
                 </div>
             </nav>
-            <br/>
-            <br/>
+            <br />
+            <br />
 
             <Container class='formN'>
 
-                    <Row className="justify-content-md-center">
-                        <Col md={6}>
-                        
+                <Row className="justify-content-md-center">
+                    <Col md={6}>
+
                         <Form >
                             <Form.Group controlId="formFirstName">
-                            <Form.Label>First Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                value={(student["0"] !== undefined)?student["0"].firstname:''}
-                                
+                                <Form.Label>First Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={(student["0"] !== undefined) ? student["0"].firstname : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formLastName">
-                            <Form.Label>Last Name</Form.Label>
-                            <Form.Control
+                                <Form.Label>Last Name</Form.Label>
+                                <Form.Control
 
-                                value={(student["0"] !== undefined)?student["0"].lastname:''}
+                                    value={(student["0"] !== undefined) ? student["0"].lastname : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
-                             <Form.Group controlId="formState">
-                            <Form.Label>State</Form.Label>
-                            <Form.Control
+                            <Form.Group controlId="formState">
+                                <Form.Label>State</Form.Label>
+                                <Form.Control
+                                    value={(student["0"] !== undefined) ? student["0"].state : ''}
+                                    disabled={!isEditing}
 
-                                value={(student["0"] !== undefined)? student["0"].state: ''}
 
-                            />
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formCountry">
-                            <Form.Label>Country</Form.Label>
-                            <Form.Control
+                                <Form.Label>Country</Form.Label>
+                                <Form.Control
 
-                                value={(student["0"] !== undefined)?student["0"].country:''}
+                                    value={(student["0"] !== undefined) ? student["0"].country : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formUniversity">
-                            <Form.Label>University</Form.Label>
-                            <Form.Control
+                                <Form.Label>University</Form.Label>
+                                <Form.Control
 
-                                value={(student["0"] !== undefined)?student["0"].university:''}
+                                    value={(student["0"] !== undefined) ? student["0"].university : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formMajor">
-                            <Form.Label>Major</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Major</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)? student["0"].major:''}
-                             
+                                    value={(student["0"] !== undefined) ? student["0"].major : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formTerm">
-                            <Form.Label>Term</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Term</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].term:''}
+                                    value={(student["0"] !== undefined) ? student["0"].term : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formYear">
-                            <Form.Label>Year</Form.Label>
-                            <Form.Control
-                                type="number"
+                                <Form.Label>Year</Form.Label>
+                                <Form.Control
+                                    type="number"
 
-                                value={(student["0"] !== undefined)?student["0"].year:''}
+                                    value={(student["0"] !== undefined) ? student["0"].year : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formSmoking">
-                            <Form.Label>Smoking</Form.Label>
-                            <div>
-                                <Form.Check
-                                type="radio"
+                                <Form.Label>Smoking</Form.Label>
+                                <div>
+                                    <Form.Check
+                                        type="radio"
 
-                                value="true"
-                                checked={(student["0"] !== undefined)?student["0"].smoking:'' === true}
+                                        value="true"
+                                        checked={(student["0"] !== undefined) ? student["0"].smoking : '' === true}
+                                        disabled={!isEditing}
 
-                                />
-                                {/* <Form.Check
+
+                                    />
+                                    {/* <Form.Check
                                 type="radio"
 
                                 value="false"
                                 checked={student["0"].smoking === false}
 
                                 /> */}
-                            </div>
+                                </div>
                             </Form.Group>
 
                             <Form.Group controlId="formDrinking">
-                            <Form.Label>Drinking</Form.Label>
-                            <div>
-                                <Form.Check
-                                type="radio"
+                                <Form.Label>Drinking</Form.Label>
+                                <div>
+                                    <Form.Check
+                                        type="radio"
 
-                                value="true"
-                                checked={(student["0"] !== undefined)?student["0"].drinking:'' === true}
+                                        value="true"
+                                        checked={(student["0"] !== undefined) ? student["0"].drinking : '' === true}
+                                        disabled={!isEditing}
 
-                                />
-                                {/* <Form.Check
+
+                                    />
+                                    {/* <Form.Check
                                 type="radio"
 
                                 value="false"
                                 checked={student["0"].drinking === false}
 
                                 /> */}
-                            </div>
+                                </div>
                             </Form.Group>
 
                             <Form.Group controlId="formVeg">
-                            <Form.Label>Veg</Form.Label>
-                            <div>
-                                <Form.Check
-                                type="radio"
+                                <Form.Label>Veg</Form.Label>
+                                <div>
+                                    <Form.Check
+                                        type="radio"
 
-                                value="true"
-                                checked={(student["0"] !== undefined)?student["0"].veg:'' === true}
+                                        value="true"
+                                        checked={(student["0"] !== undefined) ? student["0"].veg : '' === true}
+                                        disabled={!isEditing}
 
-                                />
-                                {/* <Form.Check
+
+                                    />
+                                    {/* <Form.Check
                                 type="radio"
 
                                 value="false"
                                 checked={student["0"].veg === false}
 
                                 /> */}
-                            </div>
+                                </div>
                             </Form.Group>
 
                             <Form.Group controlId="formAge">
-                            <Form.Label>Age</Form.Label>
-                            <Form.Control
-                                type="number"
+                                <Form.Label>Age</Form.Label>
+                                <Form.Control
+                                    type="number"
 
-                                value={(student["0"] !== undefined)?student["0"].age:0}
+                                    value={(student["0"] !== undefined) ? student["0"].age : 0}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formShared">
-                            <Form.Label>Shared</Form.Label>
-                            <div>
-                                <Form.Check
-                                type="radio"
+                                <Form.Label>Shared</Form.Label>
+                                <div>
+                                    <Form.Check
+                                        type="radio"
 
-                                value="true"
-                                checked={(student["0"] !== undefined)?student["0"].shared:'' === true}
- 
-                                />
-                                {/* <Form.Check
+                                        value="true"
+                                        checked={(student["0"] !== undefined) ? student["0"].shared : '' === true}
+                                        disabled={!isEditing}
+
+
+                                    />
+                                    {/* <Form.Check
                                 type="radio"
                                 value="false"
                                 checked={student["0"].shared === false}
 
                                 /> */}
-                            </div>
+                                </div>
                             </Form.Group>
 
                             <Form.Group controlId="formHobbies">
-                            <Form.Label>Hobbies</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Hobbies</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].hobbies.join(', '):''}
+                                    value={(student["0"] !== undefined) ? student["0"].hobbies.join(', ') : ''}
+                                    disabled={!isEditing}
 
-                            />
-                            {/* <Form.Text className="text-muted">
+
+                                />
+                                {/* <Form.Text className="text-muted">
                                 Enter your hobbies separated by commas.
                             </Form.Text> */}
                             </Form.Group>
 
                             <Form.Group controlId="formDegree">
-                            <Form.Label>Degree</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Degree</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].degree:''}
+                                    value={(student["0"] !== undefined) ? student["0"].degree : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formMail">
-                            <Form.Label>Mail</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Mail</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].mail:''}
+                                    value={(student["0"] !== undefined) ? student["0"].mail : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formLanguages">
-                            <Form.Label>Languages</Form.Label>
-                            <Form.Control
-                                type="text"
-       
-                                value={(student["0"] !== undefined)?student["0"].languages.join(', '):''}
+                                <Form.Label>Languages</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                            />
-    
+                                    value={(student["0"] !== undefined) ? student["0"].languages.join(', ') : ''}
+                                    disabled={!isEditing}
+
+
+                                />
+
                             </Form.Group>
 
                             <Form.Group controlId="formAbout">
-                            <Form.Label>About</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>About</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].about:''}
+                                    value={(student["0"] !== undefined) ? student["0"].about : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
-                            
+
 
                             <Form.Group controlId="formUGUniversity">
-                            <Form.Label>Undergraduate University</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Undergraduate University</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].ug_univ:''}
+                                    value={(student["0"] !== undefined) ? student["0"].ug_univ : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
 
                             <Form.Group controlId="formPhone">
-                            <Form.Label>Phone</Form.Label>
-                            <Form.Control
-                                type="text"
+                                <Form.Label>Phone</Form.Label>
+                                <Form.Control
+                                    type="text"
 
-                                value={(student["0"] !== undefined)?student["0"].phone:''}
+                                    value={(student["0"] !== undefined) ? student["0"].phone : ''}
+                                    disabled={!isEditing}
 
-                            />
+
+                                />
                             </Form.Group>
+                            <br />
+                            <br />
 
-                            <Button variant="primary" type="submit">
-                            Sign Up
-                            </Button>{/**/}
+                            {
+                                isAdmin ? (
+                                    <div>
+
+
+                                        <button type="button" class="btn btn-danger" onClick={handleDeleteButtonClick}>Delete</button>
+
+
+                                    </div>
+
+                                ) : (
+                                    <div></div>
+                                )
+                            }
+
+
                         </Form>
-                        </Col>
-                    </Row> 
-            </Container> 
+                    </Col>
+                </Row>
+            </Container>
 
 
 
