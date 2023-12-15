@@ -34,7 +34,7 @@ function StudentHub() {
                     <Route path="Universities" element={<Universities />} />
                     <Route path="Students/:uniName" element={<Students />} />
                     <Route path="Profile" element={<Profile />} />
-                    <Route path="StudentDetails" element={<StudentDetails />} />
+                    <Route path="StudentDetails/:id" element={<StudentDetails />} />
 
                 </Routes>
 

@@ -4,9 +4,12 @@ import { useAuth } from "../../AuthContext";
 import './index.css'
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import AuthService from "../AuthService";
 
 
 function Profile() {
+
+    const storedUserDetails = AuthService.getUserDetails();
 
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });

@@ -5,6 +5,14 @@ const AuthService = {
     saveUserDetails: (userDetails) => {
       localStorage.setItem('userDetails', JSON.stringify(userDetails));
     },
+    setStudentDetails: (studentDetails) => {
+      localStorage.setItem('studentDetails', JSON.stringify(studentDetails));
+    },
+
+    getStudentDetails: () => {
+      const studentDetailsString = localStorage.getItem('studentDetails');
+      return studentDetailsString ? JSON.parse(studentDetailsString) : null;
+    },
   
     // Function to get user details from localStorage
     getUserDetails: () => {

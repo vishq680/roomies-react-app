@@ -114,38 +114,97 @@ function Dashboard() {
     }, []);
 
 
+    const [Restaurants, setRestaurants] = useState([]);
+
     useEffect(() => {
+
+
+        const getProfiles = async () =>{
+
 
         if (isSignedIn && !isAdmin) {
             try {
-                axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
+                await axios.get(`https://roomies-node-app.onrender.com/api/users/${storedUserDetails[0].university}`)
                     .then(response => setStudents(response.data))
                     .catch(error => console.error('Error fetching data:', error));
             }
             catch {
                 console.log("No students found from university");
+
             }
         }
+        }
+
+        getProfiles();
+
+
+
     }, []);
+
+
+
+    useEffect(() =>{
+
+        const getRestaurantData = async () =>{
+
+            const univ = storedUserDetails[0].university;
+            let place = "";
+            
+            if (univ === "northeastern university"){
+                place = "boston";
+            }
+            else if (univ === "chicago university"){
+                place = "chicago";
+            }
+            else if ( univ === "stanford university"){
+                place = "cambridge";
+            }
+            else if ( univ === "mit university"){
+                place = "brookline";
+            }
+            else if ( univ === "university texas dallas"){
+                place = "dallas";
+            }
+            else if ( univ === "arizona state university"){
+                place = "tempe";
+            }
+            else if ( univ === "stony brook"){
+                place = "new york";
+            }
+
+            if (isSignedIn) {
+                await axios.get(`https://roomies-node-app.onrender.com/api/users/restaurants/${place}`)
+                .then(response => setRestaurants(response.data))
+                .catch(error => console.error('Error fetching data:', error));
+            }
+        }
+
+        getRestaurantData();
+
+
+
+    }, [])
+
+    const [searchText, setSearchText] = useState("");
 
 
 
     return (
         <div>
-            <nav class="navbar navbar-dark navbar-expand-md bg-dark justify-content-center">
-                <a href="/" class="navbar-brand d-flex w-50 mr-auto p-2">Roomies</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
-                    <span class="navbar-toggler-icon"></span>
+            <nav className="navbar navbar-dark navbar-expand-md bg-dark justify-content-center">
+                <a href="/" className="navbar-brand d-flex w-50 mr-auto p-2">Roomies</a>
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsingNavbar3">
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse w-100" id="collapsingNavbar3">
-                    <ul class="navbar-nav w-100 justify-content-center">
-                        <Link class='no-underline' to={`/StudentHub/Universities`}>
-                            <li class="nav-item ">
-                                <a class="nav-link" href="">Top Universities</a>
+                <div className="navbar-collapse collapse w-100" id="collapsingNavbar3">
+                    <ul className="navbar-nav w-100 justify-content-center">
+                        <Link className='no-underline' to={`/StudentHub/Universities`}>
+                            <li className="nav-item ">
+                                <a className="nav-link" href="">Top Universities</a>
                             </li>
                         </Link>
                     </ul>
-                    <ul class="nav navbar-nav ml-auto w-100 justify-content-end p-2">
+                    <ul className="nav navbar-nav ml-auto w-100 justify-content-end p-2">
                         {
                             isSignedIn ? (
                                 <li>
@@ -157,13 +216,13 @@ function Dashboard() {
                                             onClick={toggleDropdown}
                                             aria-expanded={isDropdownOpen}
                                         >
-                                            <i class="fa-solid fa-user"></i>
+                                            <i className="fa-solid fa-user"></i>
                                         </button>
                                         <ul
                                             className={`dropdown-menu ${isDropdownOpen ? 'show' : ''}`}
                                             aria-labelledby="dropdownMenuButton2"
                                         >
-                                            <Link class='no-underline' to={`/StudentHub/Profile`}>
+                                            <Link className='no-underline' to={`/StudentHub/Profile`}>
                                                 <li>
                                                     <a className="dropdown-item" href="#">
                                                         <i className="fas fa-user-alt pe-2"></i>My Profile
@@ -180,10 +239,10 @@ function Dashboard() {
                                 </li>
 
                             ) : (
-                                <Link class='no-underline' to={`/StudentHub/Login`}  >
+                                <Link className='no-underline' to={`/StudentHub/Login`}  >
 
-                                    <li class="nav-item">
-                                        <a class="nav-link " href="">Login</a>
+                                    <li className="nav-item">
+                                        <a className="nav-link " href="">Login</a>
                                     </li>
                                 </Link>
                             )
@@ -194,6 +253,9 @@ function Dashboard() {
                 </div>
             </nav>
 
+
+
+           
 
             {
                 isAdmin ? (
@@ -216,11 +278,12 @@ function Dashboard() {
                                         </Link>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
-                ) : (
-                    <div className="container d-flex justify-content-center align-items-center vh-10 search">
+                ) : ( 
+                        <div className="container d-flex justify-content-center align-items-center vh-10 search">
                         <div className="row">
                             <div className="col-md-12 offset-md-2">
                                 <div className="input-group mb-3">
@@ -230,13 +293,16 @@ function Dashboard() {
                                         placeholder="Search University"
                                         aria-label="Search"
                                         aria-describedby="basic-addon2"
+                                        value={searchText}
+                                        onChange={(e) =>{setSearchText(e.target.value)}}
                                     />
                                     <div className="input-group-append">
-                                        <Link to={`/StudentHub/StudentDetails`}>
+                                        <Link to={`/StudentHub/Students/${searchText}`}>
                                             <button className="btn btn-primary" type="button">
                                                 Search
                                             </button>
                                         </Link>
+  
                                     </div>
                                 </div>
                             </div>
@@ -250,13 +316,18 @@ function Dashboard() {
             <div>
                 <div>
                     <div>
-                        <h2 class="p-2">Popular Universities</h2>
-                        <hr />
+                    <hr />
+                        <h2 className="p-2">Popular Universities</h2>
+                        
 
 
                         <div className="card-deck d-flex flex-row flex-wrap">
                             {universities.map((university, index) => (
-                                <Link class='no-underline' to={`/StudentHub/Students/${universities.name}`}>
+
+                                <Link key={university.id} className='no-underline' to={ `/StudentHub/Students/${university.name}`}>
+
+                           
+
                                     <div key={index} className="card m-2">
                                         <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={university.name} />
                                         <div className="card-body">
@@ -268,17 +339,18 @@ function Dashboard() {
                         </div>
 
                     </div>
+                    <div>
                     {
                         isSignedIn && !isAdmin ? (
                             <div>
                                 <br />
                                 <br />
-
-                                <h2>Recommended Profiles</h2>
                                 <hr />
-                                <div className="card-deck d-flex flex-row flex-wrap">
+                                <h2>Recommended Profiles</h2>
+                                
+                                <div className="card-deck d-flex flex-row flex-wrap"> 
                                     {students.map((students, index) => (
-                                        <Link class='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }}>
+                                        <Link className='no-underline' to={{ pathname: 'StudentHub/Students', state: { ...students.name } }} key={students.id}>
                                             <div key={index} className="card m-2">
                                                 <img className="card-img-top" src="https://img.freepik.com/premium-vector/cartoon-urban-cityscape-with-college-academy-students-university-architecture-background_212168-968.jpg" alt={students.name} />
                                                 <div className="card-body">
@@ -293,6 +365,39 @@ function Dashboard() {
                             <div></div>
                         )
                     }
+                    </div>
+                    <div>
+                    {
+                        isSignedIn ? (
+                            <div>
+                                <br />
+                                <br />
+                                <hr />
+                                <h2>Recommended Restaurants around {storedUserDetails[0].university}</h2>
+                                
+                                <div className="card-deck d-flex flex-row flex-wrap"> 
+                                    {Restaurants.map((restaurant, index) => (
+                                        <Link className='no-underline' key={restaurant.id}>
+                                            <div key={index} className="card m-2">
+                                                <img className="card-img-top" src={restaurant.image_url} alt={restaurant.name} />
+                                                <div className="card-body">
+                                                    <h5 className="card-title">{capitalizeFirstLetter(restaurant.name)}</h5>
+                                                    <p>{restaurant.rating}</p>
+                                                    <p>{restaurant.address}</p>
+                                                    <p>{restaurant.review_count}</p>
+                                                    <p>{restaurant.phone}</p>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <div></div>
+                        )
+                    }
+                    </div>
+                    
                 </div>
             </div>
         </div>
