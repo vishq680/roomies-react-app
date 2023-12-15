@@ -123,8 +123,34 @@ function Dashboard() {
     useEffect(() =>{
 
         const getRestaurantData = async () =>{
+
+            const univ = storedUserDetails[0].university;
+            let place = "";
+            
+            if (univ === "northeastern university"){
+                place = "boston";
+            }
+            else if (univ === "chicago university"){
+                place = "chicago";
+            }
+            else if ( univ === "stanford university"){
+                place = "cambridge";
+            }
+            else if ( univ === "mit university"){
+                place = "brookline";
+            }
+            else if ( univ === "university texas dallas"){
+                place = "dallas";
+            }
+            else if ( univ === "arizona state university"){
+                place = "tempe";
+            }
+            else if ( univ === "stony brook"){
+                place = "new york";
+            }
+
             if (isSignedIn) {
-                await axios.get(`https://roomies-node-app.onrender.com/api/users/restaurants/brookline`)
+                await axios.get(`https://roomies-node-app.onrender.com/api/users/restaurants/${place}`)
                 .then(response => setRestaurants(response.data))
                 .catch(error => console.error('Error fetching data:', error));
             }
@@ -135,6 +161,8 @@ function Dashboard() {
 
 
     }, [])
+
+    const [searchText, setSearchText] = useState("");
 
 
 
@@ -213,9 +241,11 @@ function Dashboard() {
                                 placeholder="Search University"
                                 aria-label="Search"
                                 aria-describedby="basic-addon2"
+                                value={searchText}
+                                onChange={(e) =>{setSearchText(e.target.value)}}
                             />
                             <div className="input-group-append">
-                                <Link to={`/StudentHub/Students`}>
+                                <Link to={`/StudentHub/Students/${searchText}`}>
                                     <button className="btn btn-primary" type="button">
                                         Search
                                     </button>
@@ -284,7 +314,7 @@ function Dashboard() {
                                 <br />
                                 <br />
                                 <hr />
-                                <h2>Recommended Restaurants</h2>
+                                <h2>Recommended Restaurants around {storedUserDetails[0].university}</h2>
                                 
                                 <div className="card-deck d-flex flex-row flex-wrap"> 
                                     {Restaurants.map((restaurant, index) => (
