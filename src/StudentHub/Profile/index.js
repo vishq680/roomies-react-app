@@ -10,7 +10,9 @@ import AuthService from "../AuthService";
 function Profile() {
 
     const storedUserDetails = AuthService.getUserDetails();
+    console.log("sffdsdfsffds: ", JSON.stringify(storedUserDetails));
 
+    
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const dropdownRef = useRef(null);
@@ -53,7 +55,7 @@ function Profile() {
     const { isSignedIn } = useAuth();
 
 
-    const [formData, setFormData] = useState({
+    const emptyForm ={
         firstname: '',
         lastname: '',
         state: '',
@@ -78,7 +80,8 @@ function Profile() {
         phone: '',
 
 
-    });
+    }
+    const [formData, setFormData] = useState(storedUserDetails[0]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -93,42 +96,44 @@ function Profile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log("fsfs: ",formData);
 
         try {
             // Send a POST request to the server
-            const response = await axios.post('https://roomies-node-app.onrender.com/api/users/signup', formData);
-            console.log(response.data);
+            console.log("data before updating", JSON.stringify(formData))
+            const response = await axios.put(`https://roomies-node-app.onrender.com/api/users/${formData}`, formData);
+            console.log("ffff: ",response.data);
 
 
-            // Reset the form data if needed
-            setFormData({
-                firstname: '',
-                lastname: '',
-                state: '',
-                country: '',
-                university: '',
-                major: '',
-                term: '',
-                year: '',
-                smoking: '',
-                drinking: '',
-                veg: '',
-                Age: '',
-                shared: '',
-                hobbies: '',
-                degree: '',
-                mail: '',
-                languages: '',
-                about: '',
-                username: '',
-                password: '',
-                ug_univ: '',
-                phone: '',
-            });
+            // // Reset the form data if needed
+            // setFormData({
+            //     firstname: '',
+            //     lastname: '',
+            //     state: '',
+            //     country: '',
+            //     university: '',
+            //     major: '',
+            //     term: '',
+            //     year: '',
+            //     smoking: '',
+            //     drinking: '',
+            //     veg: '',
+            //     Age: '',
+            //     shared: '',
+            //     hobbies: '',
+            //     degree: '',
+            //     mail: '',
+            //     languages: '',
+            //     about: '',
+            //     username: '',
+            //     password: '',
+            //     ug_univ: '',
+            //     phone: '',
+            // });
 
-            alert('User signed up successfully!');
-            setSignIn(response.data);
-            navigate('/StudentHub/Dashboard');
+            // alert('User signed up successfully!');
+            // setSignIn(response.data);
+            // navigate('/StudentHub/Dashboard');
         } catch (error) {
             console.error('Error signing up:', error);
             alert('Error signing up. Please try again.');
@@ -346,7 +351,7 @@ function Profile() {
                                     type="text"
                                     placeholder="Enter your Age"
                                     name="Age"
-                                    value={formData.Age}
+                                    value={formData.age}
                                     onChange={handleChange}
                                     required
                                 />
@@ -439,7 +444,7 @@ function Profile() {
                             <Form.Group controlId="formPassword">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
-                                    type="password"
+                                    type="text"
                                     placeholder="Enter your Password"
                                     name="password"
                                     value={formData.password}
@@ -473,7 +478,7 @@ function Profile() {
                             </Form.Group>
 
                             <Button variant="primary" type="submit">
-                                Sign Up
+                                Edit Profile
                             </Button>
                         </Form>
                     </Col>
