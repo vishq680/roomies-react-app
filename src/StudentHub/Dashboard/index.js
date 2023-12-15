@@ -195,28 +195,55 @@ function Dashboard() {
             </nav>
 
 
-            <div className="container d-flex justify-content-center align-items-center vh-10 search">
-                <div className="row">
-                    <div className="col-md-12 offset-md-2">
-                        <div className="input-group mb-3">
-                            <input
-                                type="text"
-                                className="form-control "
-                                placeholder="Search University"
-                                aria-label="Search"
-                                aria-describedby="basic-addon2"
-                            />
-                            <div className="input-group-append">
-                                <Link to={`/StudentHub/Students`}>
-                                    <button className="btn btn-primary" type="button">
-                                        Search
-                                    </button>
-                                </Link>
+            {
+                isAdmin ? (
+                    <div className="container d-flex justify-content-center align-items-center vh-10 search">
+                        <div className="row">
+                            <div className="col-md-12 offset-md-2">
+                                <div className="input-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control "
+                                        placeholder="Search Student ID"
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon2"
+                                    />
+                                    <div className="input-group-append">
+                                        <Link to={`/StudentHub/StudentDetails`}>
+                                            <button className="btn btn-primary" type="button">
+                                                Search
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                ) : (
+                    <div className="container d-flex justify-content-center align-items-center vh-10 search">
+                        <div className="row">
+                            <div className="col-md-12 offset-md-2">
+                                <div className="input-group mb-3">
+                                    <input
+                                        type="text"
+                                        className="form-control "
+                                        placeholder="Search University"
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon2"
+                                    />
+                                    <div className="input-group-append">
+                                        <Link to={`/StudentHub/StudentDetails`}>
+                                            <button className="btn btn-primary" type="button">
+                                                Search
+                                            </button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
 
 
 
@@ -242,7 +269,7 @@ function Dashboard() {
 
                     </div>
                     {
-                        isSignedIn  && !isAdmin ? (
+                        isSignedIn && !isAdmin ? (
                             <div>
                                 <br />
                                 <br />
